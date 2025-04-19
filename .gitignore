@@ -1,0 +1,37 @@
+# Xcode
+build/
+DerivedData/
+*.xcworkspace
+!default.xcworkspace
+*.xcuserstate
+xcuserdata/
+
+# Swift Package Manager
+Packages/
+.swiftpm/
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+
+# CocoaPods
+# (if you ever add Pod dependencies)
+Pods/
+
+# Playgrounds
+timeline.xctoolkitplan
+
+# Asset catalogs
+*.xcassets/Contents.json
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+
+# JetBrains
+.idea/
+
+# macOS
+.DS_Store
