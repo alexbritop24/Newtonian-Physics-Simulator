@@ -11,28 +11,17 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1) Checkout your code
       - uses: actions/checkout@v4
 
-      # 2) Set up Xcode 15
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '15.0'
 
-      # 3) (Optional) Install SwiftLint if you’re using it
-      - name: Install SwiftLint
-        run: brew install swiftlint
-
-      # 4) (Optional) Run SwiftLint
-      - name: Run SwiftLint
-        run: swiftlint
-
-      # 5) Build & run your unit tests
       - name: Build and test
         run: |
           xcodebuild \
             -project "Newtonian Physics Simulator.xcodeproj" \
             -scheme "Newtonian Physics Simulator iOS" \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=17.0' \
             clean build test
