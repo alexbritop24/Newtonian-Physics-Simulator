@@ -23,5 +23,5 @@ jobs:
           xcodebuild \
             -project "Newtonian Physics Simulator.xcodeproj" \
             -scheme "Newtonian Physics Simulator iOS" \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=17.0' \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
             clean build test
