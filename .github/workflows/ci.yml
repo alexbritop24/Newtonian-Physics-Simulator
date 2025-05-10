@@ -21,7 +21,7 @@ jobs:
       - name: Build and test
         run: |
           xcodebuild \
-            -project "Newtonian Physics Simulator/Newtonian Physics Simulator.xcodeproj" \
+            +project "Newtonian Physics Simulator/Newtonian Physics Simulator.xcodeproj" \
             -scheme "Newtonian Physics Simulator iOS" \
             -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
             clean build test
