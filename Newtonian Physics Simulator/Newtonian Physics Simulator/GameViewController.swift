@@ -2,6 +2,8 @@ import UIKit
 import SpriteKit
 import GameplayKit
 
+
+
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -9,6 +11,8 @@ class GameViewController: UIViewController {
 
         // 1. Cast view to SKView
         guard let skView = view as? SKView else { return }
+        
+        skView.accessibilityIdentifier = "SpriteKitViewIdentifier"
 
         // 2. Instantiate the scene to fit the view
         let scene = GameScene(size: skView.bounds.size)

@@ -29,4 +29,13 @@ class GameScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered; leave empty for now
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+
+        // Use our factory to make a ball at the tap
+        let ball = PhysicsObjectFactory.makeBall(radius: 20, position: location)
+        addChild(ball)
+    }
 }

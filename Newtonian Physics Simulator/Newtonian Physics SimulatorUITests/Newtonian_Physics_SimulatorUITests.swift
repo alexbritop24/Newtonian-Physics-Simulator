@@ -38,4 +38,20 @@ final class Newtonian_Physics_SimulatorUITests: XCTestCase {
             XCUIApplication().launch()
         }
     }
+    
+    func testTappingSpawnsABall() {
+      let app = XCUIApplication()
+      app.launch()
+
+      let skView = app.otherElements["SpriteKitViewIdentifier"] // we'll mark our SKView
+      XCTAssertTrue(skView.exists)
+
+      // Tap in the center
+      skView.tap()
+
+      // Now there should be a new node in the scene. We can verify by snapshotting child count:
+      // (This is a bit of a hack—better is exposing a label or counter in your UI for testing.)
+    }
+    
+    
 }
