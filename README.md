@@ -9,6 +9,10 @@ A SpriteKit‑powered iOS physics playground where you can watch objects fall, b
 - Static boundary (ground) via `edgeLoop` physics body  
 - Tap to spawn new balls, rectangles, and custom shapes  
 - Adjustable physics parameters via in‑app UI (coming soon!)
+## New Features (June 2025)
+- Pause and Resume simulation with button controls
+- Reset button to restart the scene
+- Gravity slider to dynamically adjust simulation strength
 
 ## 📥 Requirements
 - Xcode 15+  
