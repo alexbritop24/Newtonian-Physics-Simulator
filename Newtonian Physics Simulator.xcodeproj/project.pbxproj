@@ -6,6 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5CB85E852DFC07AB004562D0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB85E842DFC07AB004562D0 /* AppDelegate.swift */; };
+		5CB85E872DFC07C9004562D0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB85E862DFC07C9004562D0 /* GameScene.swift */; };
+		5CB85E892DFC07EA004562D0 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB85E882DFC07EA004562D0 /* GameViewController.swift */; };
+		5CB85E8B2DFC0810004562D0 /* PhysicsObjectFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB85E8A2DFC0810004562D0 /* PhysicsObjectFactory.swift */; };
+		5CB85E8D2DFC084E004562D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5CB85E8C2DFC084E004562D0 /* Assets.xcassets */; };
+		5CB85E8F2DFC0867004562D0 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5CB85E8E2DFC0867004562D0 /* Actions.sks */; };
+		5CB85E912DFC0882004562D0 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5CB85E902DFC0882004562D0 /* GameScene.sks */; };
+		5CB85E972DFC08A0004562D0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5CB85E932DFC08A0004562D0 /* LaunchScreen.storyboard */; };
+		5CB85E982DFC08A0004562D0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5CB85E952DFC08A0004562D0 /* Main.storyboard */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5C28ED6B2DCEEC5E004E9D01 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,14 +39,18 @@
 		5C28ED512DCEEC5B004E9D01 /* Newtonian Physics Simulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Newtonian Physics Simulator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C28ED6A2DCEEC5E004E9D01 /* Newtonian Physics SimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Newtonian Physics SimulatorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C28ED742DCEEC5E004E9D01 /* Newtonian Physics SimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Newtonian Physics SimulatorUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CB85E842DFC07AB004562D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5CB85E862DFC07C9004562D0 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		5CB85E882DFC07EA004562D0 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		5CB85E8A2DFC0810004562D0 /* PhysicsObjectFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsObjectFactory.swift; sourceTree = "<group>"; };
+		5CB85E8C2DFC084E004562D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5CB85E8E2DFC0867004562D0 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
+		5CB85E902DFC0882004562D0 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		5CB85E922DFC08A0004562D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5CB85E942DFC08A0004562D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5C28ED532DCEEC5B004E9D01 /* Newtonian Physics Simulator */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Newtonian Physics Simulator";
-			sourceTree = "<group>";
-		};
 		5C28ED6D2DCEEC5E004E9D01 /* Newtonian Physics SimulatorTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Newtonian Physics SimulatorTests";
@@ -75,7 +91,14 @@
 		5C28ED482DCEEC5B004E9D01 = {
 			isa = PBXGroup;
 			children = (
-				5C28ED532DCEEC5B004E9D01 /* Newtonian Physics Simulator */,
+				5CB85E842DFC07AB004562D0 /* AppDelegate.swift */,
+				5CB85E862DFC07C9004562D0 /* GameScene.swift */,
+				5CB85E882DFC07EA004562D0 /* GameViewController.swift */,
+				5CB85E8A2DFC0810004562D0 /* PhysicsObjectFactory.swift */,
+				5CB85E8C2DFC084E004562D0 /* Assets.xcassets */,
+				5CB85E8E2DFC0867004562D0 /* Actions.sks */,
+				5CB85E902DFC0882004562D0 /* GameScene.sks */,
+				5CB85E962DFC08A0004562D0 /* Base.lproj */,
 				5C28ED6D2DCEEC5E004E9D01 /* Newtonian Physics SimulatorTests */,
 				5C28ED772DCEEC5E004E9D01 /* Newtonian Physics SimulatorUITests */,
 				5C28ED522DCEEC5B004E9D01 /* Products */,
@@ -92,6 +115,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5CB85E962DFC08A0004562D0 /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				5CB85E932DFC08A0004562D0 /* LaunchScreen.storyboard */,
+				5CB85E952DFC08A0004562D0 /* Main.storyboard */,
+			);
+			path = Base.lproj;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -106,9 +138,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				5C28ED532DCEEC5B004E9D01 /* Newtonian Physics Simulator */,
 			);
 			name = "Newtonian Physics Simulator";
 			packageProductDependencies = (
@@ -175,6 +204,7 @@
 				TargetAttributes = {
 					5C28ED502DCEEC5B004E9D01 = {
 						CreatedOnToolsVersion = 16.3;
+						LastSwiftMigration = 1640;
 					};
 					5C28ED692DCEEC5E004E9D01 = {
 						CreatedOnToolsVersion = 16.3;
@@ -212,6 +242,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CB85E972DFC08A0004562D0 /* LaunchScreen.storyboard in Resources */,
+				5CB85E982DFC08A0004562D0 /* Main.storyboard in Resources */,
+				5CB85E912DFC0882004562D0 /* GameScene.sks in Resources */,
+				5CB85E8D2DFC084E004562D0 /* Assets.xcassets in Resources */,
+				5CB85E8F2DFC0867004562D0 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +271,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CB85E892DFC07EA004562D0 /* GameViewController.swift in Sources */,
+				5CB85E852DFC07AB004562D0 /* AppDelegate.swift in Sources */,
+				5CB85E872DFC07C9004562D0 /* GameScene.swift in Sources */,
+				5CB85E8B2DFC0810004562D0 /* PhysicsObjectFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +306,25 @@
 			targetProxy = 5C28ED752DCEEC5E004E9D01 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5CB85E932DFC08A0004562D0 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5CB85E922DFC08A0004562D0 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		5CB85E952DFC08A0004562D0 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5CB85E942DFC08A0004562D0 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		5C28ED7C2DCEEC5E004E9D01 /* Debug */ = {
@@ -395,6 +453,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MJ379P7U7T;
@@ -413,6 +472,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.github.alexbritop24.Newtonian-Physics-Simulator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -423,6 +483,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MJ379P7U7T;
