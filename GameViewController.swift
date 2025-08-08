@@ -1,132 +1,148 @@
 import UIKit
 import SpriteKit
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, MainMenuSceneDelegate, GameSceneUIDelegate {
 
     private var skView: SKView!
     private var gravitySlider: UISlider!
     private var gravityLabel: UILabel!
     private var pauseButton: UIButton!
     private var resetButton: UIButton!
-    private var gameScene: GameScene?
+    private var menuButton: UIButton!
+    private var objectButton: UIButton!
+
+    private var currentObjectType: ObjectType = .ball
+    private(set) var gameScene: GameScene?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        setupScene()
+        view.backgroundColor = .black
+        setupSKView()
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        skView.showsDrawCount = true
+        skView.isPaused = false
+        skView.isUserInteractionEnabled = true
+        presentMainMenu()
     }
 
-    private func setupUI() {
-        // Setup SKView
+    private func setupSKView() {
         skView = SKView(frame: view.bounds)
         skView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        skView.ignoresSiblingOrder = true
         view.addSubview(skView)
-
-        // Setup slider
-        gravitySlider = UISlider()
-        gravitySlider.translatesAutoresizingMaskIntoConstraints = false
-        gravitySlider.minimumValue = -20
-        gravitySlider.maximumValue = 0
-        gravitySlider.value = -9.8
-        gravitySlider.minimumTrackTintColor = .systemBlue
-        gravitySlider.maximumTrackTintColor = .systemBlue
-        gravitySlider.setThumbImage(makeSilverThumbImage(size: CGSize(width: 24, height: 24)), for: .normal)
-        gravitySlider.addTarget(self, action: #selector(gravitySliderChanged), for: .valueChanged)
-        view.addSubview(gravitySlider)
-
-        // Setup gravity label
-        gravityLabel = UILabel()
-        gravityLabel.translatesAutoresizingMaskIntoConstraints = false
-        gravityLabel.font = UIFont(name: "SFMono-Regular", size: 16)
-        gravityLabel.textColor = UIColor.systemBlue
-        gravityLabel.text = "Gravity: \(gravitySlider.value)"
-        view.addSubview(gravityLabel)
-
-        // Setup buttons
-        pauseButton = makeStyledButton(title: "Pause", bgColor: UIColor.systemBlue)
-        pauseButton.addTarget(self, action: #selector(togglePause), for: .touchUpInside)
-        view.addSubview(pauseButton)
-
-        resetButton = makeStyledButton(title: "Reset", bgColor: UIColor.systemRed)
-        resetButton.addTarget(self, action: #selector(resetScene), for: .touchUpInside)
-        view.addSubview(resetButton)
-
-        // Layout
-        NSLayoutConstraint.activate([
-            gravitySlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            gravitySlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            gravitySlider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-
-            gravityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            gravityLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-
-            pauseButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            pauseButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            pauseButton.widthAnchor.constraint(equalToConstant: 70),
-            pauseButton.heightAnchor.constraint(equalToConstant: 36),
-
-            resetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            resetButton.topAnchor.constraint(equalTo: pauseButton.bottomAnchor, constant: 12),
-            resetButton.widthAnchor.constraint(equalToConstant: 70),
-            resetButton.heightAnchor.constraint(equalToConstant: 36),
-        ])
     }
 
-    private func setupScene() {
-        let scene = GameScene(size: skView.bounds.size)
-        scene.scaleMode = .resizeFill
-        skView.presentScene(scene)
-        gameScene = scene
-    }
+    private func presentMainMenu() {
+        print("➡️ presentMainMenu()")
+        removeSimulationUI()
+        skView.isPaused = false
 
-    // MARK: - UI Helpers
+        let menuScene = MainMenuScene(size: skView.bounds.size)
+        menuScene.scaleMode = .resizeFill
+        menuScene.mainMenuDelegate = self
+        print("✅ delegate set? \(menuScene.mainMenuDelegate != nil)")
 
-    private func makeStyledButton(title: String, bgColor: UIColor) -> UIButton {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(title, for: .normal)
-        button.titleLabel?.font = UIFont(name: "SFMono-Regular", size: 14)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = bgColor
-        button.layer.cornerRadius = 18
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOpacity = 0.25
-        button.layer.shadowOffset = CGSize(width: 0, height: 2)
-        button.layer.shadowRadius = 4
-        return button
-    }
-
-    private func makeSilverThumbImage(size: CGSize) -> UIImage {
-        let rect = CGRect(origin: .zero, size: size)
-        let renderer = UIGraphicsImageRenderer(size: size)
-
-        return renderer.image { context in
-            let ctx = context.cgContext
-            let center = CGPoint(x: size.width/2, y: size.height/2)
-            let radius = size.width/2
-
-            let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                                      colors: [UIColor.lightGray.cgColor, UIColor.darkGray.cgColor] as CFArray,
-                                      locations: [0.0, 1.0])!
-
-            ctx.addEllipse(in: rect)
-            ctx.clip()
-            ctx.drawRadialGradient(gradient,
-                                   startCenter: center, startRadius: 0,
-                                   endCenter: center, endRadius: radius,
-                                   options: [])
-            ctx.setStrokeColor(UIColor.black.withAlphaComponent(0.3).cgColor)
-            ctx.setLineWidth(1)
-            ctx.strokeEllipse(in: rect)
+        DispatchQueue.main.async {
+            self.skView.presentScene(menuScene, transition: .fade(withDuration: 0.25))
+            print("🎬 presented MainMenuScene  (current=\(String(describing: type(of: self.skView.scene!))))")
         }
     }
 
-    // MARK: - Actions
+    // MARK: - MainMenuSceneDelegate
+    func didTapStartSimulation() {
+        print("🔥 didTapStartSimulation()")
+        let scene = GameScene(size: skView.bounds.size)
+        scene.scaleMode = .resizeFill
+        scene.uiDelegate = self
+        gameScene = scene
+        skView.isPaused = false
 
-    @objc private func gravitySliderChanged() {
-        let gravityValue = CGFloat(gravitySlider.value)
-        gameScene?.physicsWorld.gravity.dy = gravityValue
-        gravityLabel.text = String(format: "Gravity: %.1f", gravityValue)
+        DispatchQueue.main.async {
+            self.skView.presentScene(scene, transition: .crossFade(withDuration: 0.25))
+            print("🎬 presented GameScene       (current=\(String(describing: type(of: self.skView.scene!))))")
+        }
+    }
+
+    // MARK: - GameSceneUIDelegate
+    func setupSimulationUI() {
+        if gravitySlider != nil { return } // idempotent
+
+        // Slider shows positive g (0…20), physics gets -g
+        gravitySlider = UISlider()
+        gravitySlider.minimumValue = 0
+        gravitySlider.maximumValue = 20
+        gravitySlider.value = 9.8
+        gravitySlider.translatesAutoresizingMaskIntoConstraints = false
+        gravitySlider.addTarget(self, action: #selector(gravityChanged(_:)), for: .valueChanged)
+        gravitySlider.setThumbImage(styledThumbImage(diameter: 28), for: .normal)
+        view.addSubview(gravitySlider)
+
+        gravityLabel = UILabel()
+        gravityLabel.text = "Gravity: 9.8"
+        gravityLabel.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
+        gravityLabel.textColor = .systemBlue   // matches your old blue label
+        gravityLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(gravityLabel)
+
+        pauseButton = makeButton("Pause", tint: .systemBlue, action: #selector(togglePause))
+        resetButton = makeButton("Reset", tint: .systemRed, action: #selector(resetScene))
+        menuButton  = makeButton("←", tint: .systemBlue, action: #selector(returnToMenu))
+        objectButton = makeButton("Object", tint: .label, action: #selector(showObjectOptions))
+
+        [pauseButton, resetButton, menuButton, objectButton].forEach { view.addSubview($0) }
+
+        // Layout similar to your screenshot
+        NSLayoutConstraint.activate([
+            menuButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            menuButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+
+            pauseButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            pauseButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+
+            resetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            resetButton.topAnchor.constraint(equalTo: pauseButton.bottomAnchor, constant: 10),
+
+            objectButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            objectButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -44),
+
+            gravitySlider.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            gravitySlider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
+            gravitySlider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.55),
+
+            gravityLabel.centerXAnchor.constraint(equalTo: gravitySlider.centerXAnchor),
+            gravityLabel.bottomAnchor.constraint(equalTo: gravitySlider.topAnchor, constant: -8),
+        ])
+
+        gravityChanged(gravitySlider)
+        print("🧰 setupSimulationUI complete")
+    }
+
+    private func makeButton(_ title: String, tint: UIColor, action: Selector) -> UIButton {
+        let b = UIButton(type: .system)
+        b.setTitle(title, for: .normal)
+        b.setTitleColor(tint, for: .normal)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.addTarget(self, action: action, for: .touchUpInside)
+        return b
+    }
+
+    private func removeSimulationUI() {
+        gravitySlider?.removeFromSuperview(); gravitySlider = nil
+        gravityLabel?.removeFromSuperview();  gravityLabel  = nil
+        pauseButton?.removeFromSuperview();   pauseButton   = nil
+        resetButton?.removeFromSuperview();   resetButton   = nil
+        menuButton?.removeFromSuperview();    menuButton    = nil
+        objectButton?.removeFromSuperview();  objectButton  = nil
+        print("🧹 removeSimulationUI() done")
+    }
+
+    // MARK: - Actions
+    @objc private func gravityChanged(_ sender: UISlider) {
+        let g = CGFloat(sender.value) // 0…20 (positive)
+        gravityLabel?.text = String(format: "Gravity: %.1f", g)
+        gameScene?.physicsWorld.gravity = CGVector(dx: 0, dy: -g) // apply downward
     }
 
     @objc private func togglePause() {
@@ -135,14 +151,62 @@ class GameViewController: UIViewController {
     }
 
     @objc private func resetScene() {
-        gameScene?.resetScene()
+        let newScene = GameScene(size: skView.bounds.size)
+        newScene.scaleMode = .resizeFill
+        newScene.uiDelegate = self
+        gameScene = newScene
+        DispatchQueue.main.async {
+            self.skView.presentScene(newScene, transition: .crossFade(withDuration: 0.2))
+            print("♻️ reset → presented GameScene (current=\(String(describing: type(of: self.skView.scene!))))")
+        }
+        gravityChanged(gravitySlider)
     }
 
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+    @objc private func returnToMenu() {
+        presentMainMenu()
     }
 
-    override var prefersStatusBarHidden: Bool {
-        return true
+    @objc private func showObjectOptions() {
+        let alert = UIAlertController(title: "Choose Object", message: nil, preferredStyle: .actionSheet)
+        for t in ObjectType.allCases {
+            alert.addAction(UIAlertAction(title: t.rawValue.capitalized, style: .default) { _ in
+                self.currentObjectType = t
+                self.objectButton.setTitle("Object: \(t.rawValue)", for: .normal)
+                self.gameScene?.setSelectedObject(type: t)
+            })
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    // MARK: - UI Helpers
+    private func styledThumbImage(diameter: CGFloat) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: diameter, height: diameter)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return UIImage() }
+
+        let circlePath = UIBezierPath(ovalIn: rect)
+        context.addPath(circlePath.cgPath)
+        context.clip()
+
+        let colors = [UIColor.lightGray.cgColor, UIColor.darkGray.cgColor] as CFArray
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: nil)!
+
+        let center = CGPoint(x: diameter / 2, y: diameter / 2)
+        context.drawRadialGradient(gradient,
+                                   startCenter: center, startRadius: 0,
+                                   endCenter: center, endRadius: diameter / 2,
+                                   options: .drawsAfterEndLocation)
+
+        context.resetClip()
+        context.addPath(circlePath.cgPath)
+        context.setStrokeColor(UIColor.gray.cgColor)
+        context.setLineWidth(1)
+        context.strokePath()
+
+        let image = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+        UIGraphicsEndImageContext()
+        return image
     }
 }
