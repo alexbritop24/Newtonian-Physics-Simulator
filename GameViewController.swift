@@ -14,6 +14,7 @@ class GameViewController: UIViewController, MainMenuSceneDelegate, GameSceneUIDe
     private var currentObjectType: ObjectType = .ball
     private(set) var gameScene: GameScene?
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -33,23 +34,21 @@ class GameViewController: UIViewController, MainMenuSceneDelegate, GameSceneUIDe
         view.addSubview(skView)
     }
 
+    // MARK: - Scene Presentation
     private func presentMainMenu() {
-        print("➡️ presentMainMenu()")
         removeSimulationUI()
         skView.isPaused = false
 
         let menuScene = MainMenuScene(size: skView.bounds.size)
         menuScene.scaleMode = .resizeFill
         menuScene.mainMenuDelegate = self
-        print("✅ delegate set? \(menuScene.mainMenuDelegate != nil)")
 
         DispatchQueue.main.async {
             self.skView.presentScene(menuScene, transition: .fade(withDuration: 0.25))
-            print("🎬 presented MainMenuScene  (current=\(String(describing: type(of: self.skView.scene!))))")
+            print("🎬 presented MainMenuScene")
         }
     }
 
-    // MARK: - MainMenuSceneDelegate
     func didTapStartSimulation() {
         print("🔥 didTapStartSimulation()")
         let scene = GameScene(size: skView.bounds.size)
@@ -60,15 +59,16 @@ class GameViewController: UIViewController, MainMenuSceneDelegate, GameSceneUIDe
 
         DispatchQueue.main.async {
             self.skView.presentScene(scene, transition: .crossFade(withDuration: 0.25))
-            print("🎬 presented GameScene       (current=\(String(describing: type(of: self.skView.scene!))))")
+            print("🎬 presented GameScene")
         }
     }
 
-    // MARK: - GameSceneUIDelegate
+    // MARK: - GameSceneUIDelegate (UI from VC)
     func setupSimulationUI() {
-        if gravitySlider != nil { return } // idempotent
+        // Idempotent
+        if gravitySlider != nil { return }
 
-        // Slider shows positive g (0…20), physics gets -g
+        // Slider shows positive g (0…20); physics uses -g
         gravitySlider = UISlider()
         gravitySlider.minimumValue = 0
         gravitySlider.maximumValue = 20
@@ -81,18 +81,18 @@ class GameViewController: UIViewController, MainMenuSceneDelegate, GameSceneUIDe
         gravityLabel = UILabel()
         gravityLabel.text = "Gravity: 9.8"
         gravityLabel.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
-        gravityLabel.textColor = .systemBlue   // matches your old blue label
+        gravityLabel.textColor = .systemBlue
         gravityLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(gravityLabel)
 
         pauseButton = makeButton("Pause", tint: .systemBlue, action: #selector(togglePause))
         resetButton = makeButton("Reset", tint: .systemRed, action: #selector(resetScene))
-        menuButton  = makeButton("←", tint: .systemBlue, action: #selector(returnToMenu))
+        menuButton  = makeButton("←",    tint: .systemBlue, action: #selector(returnToMenu))
         objectButton = makeButton("Object", tint: .label, action: #selector(showObjectOptions))
 
         [pauseButton, resetButton, menuButton, objectButton].forEach { view.addSubview($0) }
 
-        // Layout similar to your screenshot
+        // Layout
         NSLayoutConstraint.activate([
             menuButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             menuButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
@@ -114,10 +114,12 @@ class GameViewController: UIViewController, MainMenuSceneDelegate, GameSceneUIDe
             gravityLabel.bottomAnchor.constraint(equalTo: gravitySlider.topAnchor, constant: -8),
         ])
 
+        // Apply initial gravity
         gravityChanged(gravitySlider)
         print("🧰 setupSimulationUI complete")
     }
 
+    // MARK: - UI Builders
     private func makeButton(_ title: String, tint: UIColor, action: Selector) -> UIButton {
         let b = UIButton(type: .system)
         b.setTitle(title, for: .normal)
@@ -142,7 +144,7 @@ class GameViewController: UIViewController, MainMenuSceneDelegate, GameSceneUIDe
     @objc private func gravityChanged(_ sender: UISlider) {
         let g = CGFloat(sender.value) // 0…20 (positive)
         gravityLabel?.text = String(format: "Gravity: %.1f", g)
-        gameScene?.physicsWorld.gravity = CGVector(dx: 0, dy: -g) // apply downward
+        gameScene?.physicsWorld.gravity = CGVector(dx: 0, dy: -g) // downward
     }
 
     @objc private func togglePause() {
@@ -150,16 +152,28 @@ class GameViewController: UIViewController, MainMenuSceneDelegate, GameSceneUIDe
         pauseButton.setTitle(skView.isPaused ? "Resume" : "Pause", for: .normal)
     }
 
+    // ✅ RESET: also resets selected object back to .ball and updates the button title
     @objc private func resetScene() {
+        // 1) Gravity: snap UI to 9.8 and apply immediately
+        gravitySlider?.value = 9.8
+        gravityChanged(gravitySlider)
+
+        // 2) Object selection: reset to default (.ball) and update button title
+        currentObjectType = .ball
+        objectButton?.setTitle("Object: ball", for: .normal)
+
+        // 3) Recreate a fresh scene and ensure it starts with .ball selected
         let newScene = GameScene(size: skView.bounds.size)
         newScene.scaleMode = .resizeFill
         newScene.uiDelegate = self
+        newScene.setSelectedObject(type: .ball)   // keep scene in sync
         gameScene = newScene
+
+        // 4) Present, then re-apply gravity once the scene is live
         DispatchQueue.main.async {
             self.skView.presentScene(newScene, transition: .crossFade(withDuration: 0.2))
-            print("♻️ reset → presented GameScene (current=\(String(describing: type(of: self.skView.scene!))))")
+            self.gravityChanged(self.gravitySlider)
         }
-        gravityChanged(gravitySlider)
     }
 
     @objc private func returnToMenu() {
