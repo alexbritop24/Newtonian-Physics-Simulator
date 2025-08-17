@@ -16,6 +16,10 @@ class GameScene: SKScene {
     private var lastUpdateTime: TimeInterval = 0
     private var fpsSmoothed: Double = 60
 
+    // Tap-to-start instruction
+    private var instructionLabel: SKLabelNode?
+    private var didDismissInstruction = false
+
     // MARK: - Lifecycle
     override func didMove(to view: SKView) {
         print("🧠 GameScene.didMove (size=\(size))")
@@ -29,6 +33,7 @@ class GameScene: SKScene {
 
         setupScene()
         setupDebugOverlay()
+        setupInstructionLabel()
 
         // Build the UIKit controls (slider, buttons)
         uiDelegate?.setupSimulationUI()
@@ -84,9 +89,23 @@ class GameScene: SKScene {
         debugFPSLabel = fps
     }
 
-    // Keep overlay anchored after rotation/resize
+    private func setupInstructionLabel() {
+        let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        label.text = "Tap to Start"
+        label.fontSize = 28
+        label.fontColor = .black
+        label.horizontalAlignmentMode = .center
+        label.verticalAlignmentMode = .center
+        label.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        label.zPosition = 1000
+        addChild(label)
+        instructionLabel = label
+    }
+
+    // Keep overlays anchored after rotation/resize
     override func didChangeSize(_ oldSize: CGSize) {
         debugContainer?.position = CGPoint(x: size.width - 10, y: size.height / 2)
+        instructionLabel?.position = CGPoint(x: size.width / 2, y: size.height / 2)
     }
 
     // MARK: - Reset
@@ -96,6 +115,8 @@ class GameScene: SKScene {
         physicsBody?.restitution = 0.3
         setupScene()
         setupDebugOverlay()
+        setupInstructionLabel()
+        didDismissInstruction = false
     }
 
     // MARK: - Update
@@ -127,6 +148,14 @@ class GameScene: SKScene {
 
     // MARK: - Touches
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // First tap: fade out & remove instruction label
+        if !didDismissInstruction, let intro = instructionLabel {
+            didDismissInstruction = true
+            let fadeOut = SKAction.fadeOut(withDuration: 0.6)
+            let remove = SKAction.removeFromParent()
+            intro.run(.sequence([fadeOut, remove]))
+        }
+
         guard let location = touches.first?.location(in: self) else { return }
 
         // Pick up an existing physics node if tapped
